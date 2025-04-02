@@ -1,9 +1,15 @@
 #! /bin/bash
+
+SERVICE_STATUS="$(systemctl status sssd | grep running)"
+if [[ $SERVICE_STATUS = *"running"* ]]; then
+   exit 0
+fi
+
 HST="$(hostname -f)"
 
-#yum install ipa-client -y
+yum install ipa-client -y
 
-#ipa-client-install --mkhomedir --force-join  --no-ntp --unattended  --domain dh.rt.ru --principal=admin@DH.RT.RU --password='******' --server vm-infra-ipa-m-1.dh.rt.ru --server vm-infra-ipa-m-2.dh.rt.ru
+ipa-client-install --mkhomedir --force-join  --no-ntp --unattended  --domain dh.rt.ru --principal=admin@DH.RT.RU --password='womAB0SPl@^#&`l0`k6k' --server vm-infra-ipa-m-1.dh.rt.ru --server vm-infra-ipa-m-2.dh.rt.ru
 
 
 SSSD_CONF=$(cat <<EOF
@@ -87,7 +93,9 @@ includedir /var/lib/sss/pubconf/krb5.include.d/
 EOF
 )
 
-echo "${SSSD_CONF}" #> /etc/sssd/sssd.conf
-echo "${KRB5_CONF}" #> /etc/krb5.conf
+echo "${SSSD_CONF}" > /etc/sssd/sssd.conf
+echo "${KRB5_CONF}" > /etc/krb5.conf
 
-#systemctl restart sssd
+systemctl restart sssd
+
+su - arsen.samurkhanov@GD.RT.RU
