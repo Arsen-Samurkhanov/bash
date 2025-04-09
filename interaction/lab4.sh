@@ -2,7 +2,7 @@
 
 FILE="$(systemctl status docker | grep running)"
   
-if [[ $FILE = *"active"* ]]; then
+if [[ $FILE = *"running"* ]]; then
    echo "matches"
    exit 0
 fi

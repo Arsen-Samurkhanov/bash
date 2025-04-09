@@ -1,17 +1,19 @@
 #! /bin/bash
 
+#условие проверяюшее установлен ли сервис sssd если да то скрипт не исполняется
 SERVICE_STATUS="$(systemctl status sssd | grep running)"
 if [[ $SERVICE_STATUS = *"running"* ]]; then
    exit 0
 fi
 
-HST="$(hostname -f)"
+yum install ipa-client -y  # Установка пакетов ipa-client
 
-yum install ipa-client -y
-
+# команда для подключения хоста к ipa-server
 ipa-client-install --mkhomedir --force-join  --no-ntp --unattended  --domain dh.rt.ru --principal=admin@DH.RT.RU --password='womAB0SPl@^#&`l0`k6k' --server vm-infra-ipa-m-1.dh.rt.ru --server vm-infra-ipa-m-2.dh.rt.ru
 
+HST="$(hostname -f)"
 
+# конфиг для файла /etc/sssd/sssd.conf
 SSSD_CONF=$(cat <<EOF
 [domain/dh.rt.ru]
 
@@ -51,6 +53,7 @@ homedir_substring = /home
 EOF
 )
 
+# конфиг для файла /etc/sssd/sssd.conf
 KRB5_CONF=$(cat <<EOF
 #File modified by ipa-client-install
 
@@ -93,9 +96,10 @@ includedir /var/lib/sss/pubconf/krb5.include.d/
 EOF
 )
 
+# запись данных в конфиг файлы
 echo "${SSSD_CONF}" > /etc/sssd/sssd.conf
 echo "${KRB5_CONF}" > /etc/krb5.conf
 
-systemctl restart sssd
+systemctl restart sssd # Перезапуск сервиса sssd
 
-su - arsen.samurkhanov@GD.RT.RU
+
