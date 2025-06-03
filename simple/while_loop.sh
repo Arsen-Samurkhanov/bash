@@ -7,4 +7,4 @@ do
     echo -e "$COUNT \c"   # \c allows to print output in one line
     ((COUNT-- ))
 done
-echo
+#echo
